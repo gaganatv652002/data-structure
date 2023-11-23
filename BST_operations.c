@@ -1,192 +1,182 @@
-#include <stdio.h>
-#include <stdlib.h>
-void display(),in_e(),in_bw(),del_b(),del_e(),del_bw(),menu();
-int in_b();
-int y,n;
-char i;
-struct node *create();
-struct node{
-	int data;
-	struct node *link;
-};
-typedef struct node node1;
-node1 *start=NULL;
-int main() {
-	printf("Singly linked list\n");
-	printf("MENU\n");
-	menu();
+#include<stdio.h> 
+#include<stdlib.h> 
+
+
+struct btnode
+       {
+        int value; 
+        struct btnode *l; 
+        struct btnode *r; 
+       }*root=NULL,*temp=NULL,*t2,*t1; 
+ 
+int smallest(struct btnode *t); 
+void search1(struct btnode *t,int data);        
+void delete1(); 
+void delete();
+void inorder(struct btnode *t);        
+void search(struct btnode *t); 
+void insert();       
+void create(); 
+void main() 
+{ 
+ int choice; 
+ printf("\n----BST OPERATIONS ---\n"); 
+ printf("1.Insert an element into tree\n"); 
+ printf("2.Delete an element from the tree\n"); 
+ printf("3.Inorder Traversal\n"); 
+ printf("4.Exit\n"); 
+ while(1) 
+      { 
+       printf("\nEnter your choice: "); 
+       scanf("%d", &choice); 
+       switch (choice) 
+              {
+               case 1: 
+                      insert(); 
+                      break; 
+               case 2: 
+                      delete(); 
+                      break;
+               case 3: 
+                      inorder(root); 
+                      break;
+               case 4: 
+                      exit(0); 
+              default: 
+                      printf("Wrong choice, Please enter correct choice "); 
+                      break;  
+             } 
+     } 
+}  
+void insert() 
+{ 
+ create();  
+ if(root==NULL) 
+    root=temp; 
+ else 
+    search(root); 
 }
-void menu()
-{
-	int x;
-	printf("\n1.Display\n2.Insertion at beginning\n3.Insertion at end\n4.Insertion in between\n5.Deletion at beginning\n6.deletion at end\n7.Deletion in between\n8.Exit\n");
-		printf("\nEnter your choice:");
-		scanf("%d",&x);
-		switch(x)
-		{
-		case 1:display();
-			break;
-		case 2:in_b();
-			break;
-		case 3:in_e();
-			break;
-		case 4:in_bw();
-			break;
-		case 5:del_b();
-			break;
-		case 6:del_e();
-			break;
-		case 7:del_bw();
-			break;
-		case 8:exit(0);
-		}
+ 
+void create() 
+{ 
+ int data; 
+ printf("Enter data of node to be inserted : "); 
+ scanf("%d",&data); 
+ temp =(struct btnode *)malloc(1*sizeof(struct btnode)); 
+ temp->value=data; 
+ temp->l=temp->r= NULL; 
 }
-struct node *create()
-{
-	node1 *nptr=((node1*)malloc(sizeof(node1)));
-	if(nptr==NULL)
-	{
-		printf("Memory Overflow");
-		return 0;
-	}
-	else
-	   return nptr;
+
+void search(struct btnode *t) 
+{ 
+ if((temp->value > t->value)&&(t->r!=NULL)) 
+    search(t->r); 
+ else if((temp->value > t->value)&&(t->r==NULL)) 
+    t->r=temp; 
+ else if((temp->value > t->value)&&(t->l!=NULL)) 
+    search(t->l); 
+ else if((temp->value < t->value)&&(t->l==NULL)) 
+    t->l=temp; 
+} 
+
+void inorder(struct btnode *t) 
+{ 
+ if(root==NULL) 
+   { 
+    printf("No elements in a tree to display"); 
+    return; 
+   }  
+ if(t->l!= NULL) 
+   {
+    inorder(t->l); 
+   } 
+ printf("%d-> ",t->value);  
+ if(t->r!= NULL) 
+   inorder(t->r); 
+} 
+  
+void delete() 
+{ 
+ int data; 
+ if(root == NULL) 
+   { 
+    printf("No elements in a tree to delete"); 
+    return; 
+   } 
+ printf("Enter the data to be deleted: ");
+ scanf("%d", &data); 
+ search1(root, data); 
 }
-void display()
-{
-	node1 *ptr=start;
-	if(ptr==NULL){
-		printf("\nNo elements to display\n");
-	}
-	else{
-		printf("\nElements in the linked list are:\n");
-		while(ptr!=NULL)
-		{
-			printf("%d\t",ptr->data);
-			ptr=ptr->link;
-		}
-	}
-	menu();
-}
-int in_b()
-{
-	int val;
-	node1 *nptr;
-	printf("\nEnter the element to be inserted:");
-	scanf("%d",&val);
-	nptr=create();
-	nptr->data=val;
-	if(start==NULL)
-	{
-		start=nptr;
-		nptr->link=NULL;
-	}
-	else{
-		nptr->link=start;
-		start=nptr;
-	}
-	printf("Element inserted\n");
-	menu();
-}
-void in_e()
-{
-	node1 *nptr=create(),*temp;
-	int val;
-	printf("\nEnter the element to be inserted:");
-	scanf("%d",&val);
-	nptr->data=val;
-	nptr->link=NULL;
-	temp=start;
-	while(temp->link!=NULL)
-	{
-		temp=temp->link;
-	}
-	temp->link=nptr;
-	printf("Element inserted\n");
-	menu();
-}
-void in_bw()
-{
-	node1 *temp,*nptr=create();
-	int val,pos,i;
-	printf("\nEnter the element:");
-	scanf("%d",&val);
-	printf("\nEnter the position to be inserted:");
-	scanf("%d",&pos);
-	nptr->data=val;
-	nptr->link=NULL;
-	temp=start;
-	if(pos==1)
-	{
-		nptr->link=start;
-		start=nptr;
-	}
-	else{
-		for(i=1;i<pos-1;i++)
-		{
-			temp=temp->link;
-		}
-	}
-	nptr->link=temp->link;
-	temp->link=nptr;
-	printf("Element inserted\n");
-	menu();
-}
-void del_b()
-{
-	node1 *temp;
-	if(start==NULL)
-	{
-		printf("\nList is empty!");
-	}
-	else{
-		temp=start;
-		start=start->link;
-		free(temp);
-		printf("\nElement deleted\n");
-	}
-	menu();
-}
-void del_e()
-{
-	node1 *temp,*prev;
-	temp=start;
-	if(start==NULL)
-	{
-		printf("List is empty!");
-	}
-	while(temp->link!=NULL)
-	{
-		prev=temp;
-		temp=temp->link;
-	}
-	prev->link=NULL;
-	free(temp);
-	printf("\nElement deleted\n");	
-	menu();	
-}
-void del_bw()
-{
-	node1 *temp,*pre;
-	int pos,i;
-	printf("Enter the position:");
-	scanf("%d",&pos);
-	temp=start;
-	if(start==NULL)
-	{
-		printf("List is empty!");
-	}
-	if(pos==1)
-	{
-		start=start->link;
-	}
-	else{
-		for (i=1;i<=pos;i++){
-			pre=temp;
-			temp=temp->link;
-			pre->link=temp->link;
-		}
-	}
-	printf("\nElement deleted\n");
-	menu();
+ 
+void search1(struct btnode *t,int data) 
+{ 
+ if(data > t->value) 
+   { 
+    t1=t; 
+    search1(t->r,data); 
+   } 
+ else if(data<t->value) 
+   {  
+    t1 = t; 
+    search1(t->l,data);//Move towards left subtree 
+   }
+ else if(data==t->value) 
+   delete1(t);  
+} 
+void delete1(struct btnode *t) 
+{ 
+ int k; 
+ if((t->l==NULL)&&(t->r==NULL)) 
+   { 
+    if(t1->l=t) 
+       t1->l=NULL; 
+    else 
+       t1->r=NULL;  
+    t=NULL; 
+    free(t); 
+    return; 
+   } 
+ else if((t->r==NULL)) 
+   { 
+    if(t1==t) 
+      { 
+       root=t->l; 
+       t1=root; 
+      } 
+    else if(t1->l==t)  
+       t1->l=t->l; 
+    else  
+       t1->r=t->l;  
+    t=NULL; 
+    free(t);
+    return;
+   }  
+ else if(t->l== NULL) 
+   { 
+    if(t1 == t) 
+      { 
+       root = t->r; 
+       t1 = root; 
+      } 
+    else if (t1->r == t) 
+       t1->r=t->r; 
+    else
+       t1->l=t->r; 
+    t==NULL; 
+    free(t); 
+    return;
+   }  
+ else if((t->l != NULL) && (t->r != NULL)) 
+   {
+    k=smallest(t->r); 
+    search1(root,k); 
+    t->value=k; 
+   }  
+}  
+int smallest(struct btnode *t) 
+{ 
+ if(t->l!= NULL) 
+    return(smallest(t->l));  
+ else 
+    return (t->value); 
 }
