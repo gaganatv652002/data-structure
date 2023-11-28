@@ -65,7 +65,7 @@ printf("Enter position to insert:");
 scanf("%d",&pos);
 if(pos==1) {
 ins_beg(); }
-else if(pos==count+1)
+else if(pos==count+1) 
 ins_end();
 else if(pos<count+1)
 {
